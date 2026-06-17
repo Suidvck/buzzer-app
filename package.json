@@ -1,7 +1,7 @@
 {
-  "name": "buzzer-app",
+  "name": "buzzer-app-backend",
   "version": "1.0.0",
-  "description": "Real-time Buzzer App - ระบบปุ่มกดแย่งกันตอบ",
+  "description": "Buzzer App Backend - Real-time Socket.io server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

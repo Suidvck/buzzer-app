@@ -1,0 +1,356 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Role Select */
+#role-select {
+    text-align: center;
+}
+
+#role-select h1 {
+    font-size: 4rem;
+    letter-spacing: 1rem;
+    color: #ff4444;
+    text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+    margin-bottom: 1rem;
+}
+
+#role-select p {
+    color: #888;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+#role-select button {
+    display: block;
+    width: 250px;
+    margin: 0.8rem auto;
+    padding: 1rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: 2px solid;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+}
+
+#btn-host-role {
+    background: transparent;
+    color: #ff4444;
+    border-color: #ff4444;
+}
+
+#btn-host-role:hover {
+    background: #ff4444;
+    color: #fff;
+}
+
+#btn-player-role {
+    background: transparent;
+    color: #44ff44;
+    border-color: #44ff44;
+}
+
+#btn-player-role:hover {
+    background: #44ff44;
+    color: #000;
+}
+
+/* Name Input */
+#name-input {
+    text-align: center;
+}
+
+#name-input h2 {
+    margin-bottom: 1.5rem;
+    color: #ccc;
+}
+
+#name-input input {
+    display: block;
+    width: 300px;
+    margin: 0 auto 1rem;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.2rem;
+    border: 2px solid #444;
+    border-radius: 8px;
+    background: #1a1a1a;
+    color: #fff;
+    text-align: center;
+    outline: none;
+}
+
+#name-input input:focus {
+    border-color: #44ff44;
+}
+
+#name-input button {
+    display: block;
+    width: 300px;
+    margin: 0 auto;
+    padding: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: #44ff44;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#name-input button:hover {
+    background: #33cc33;
+}
+
+/* Host Panel */
+#host-panel {
+    width: 90%;
+    max-width: 700px;
+    padding: 2rem;
+}
+
+#host-panel h2 {
+    text-align: center;
+    color: #ff4444;
+    letter-spacing: 0.3rem;
+    margin-bottom: 1.5rem;
+}
+
+#host-panel h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: #aaa;
+    letter-spacing: 0.1rem;
+}
+
+.host-controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 2px solid;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+}
+
+.control-btn.unlock {
+    background: transparent;
+    color: #44ff44;
+    border-color: #44ff44;
+}
+
+.control-btn.unlock:hover {
+    background: #44ff44;
+    color: #000;
+}
+
+.control-btn.lock {
+    background: transparent;
+    color: #ff4444;
+    border-color: #ff4444;
+}
+
+.control-btn.lock:hover {
+    background: #ff4444;
+    color: #fff;
+}
+
+.control-btn.reset {
+    background: transparent;
+    color: #ffaa00;
+    border-color: #ffaa00;
+}
+
+.control-btn.reset:hover {
+    background: #ffaa00;
+    color: #000;
+}
+
+.status-bar {
+    text-align: center;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    background: #1a1a1a;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.status-bar .status-lock {
+    color: #ff4444;
+    font-weight: bold;
+}
+
+.status-bar .status-unlock {
+    color: #44ff44;
+    font-weight: bold;
+}
+
+/* Leaderboard Table */
+#leaderboard {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#leaderboard thead th {
+    padding: 0.6rem;
+    text-align: left;
+    border-bottom: 2px solid #333;
+    color: #888;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+#leaderboard tbody tr {
+    border-bottom: 1px solid #222;
+    transition: background 0.15s;
+}
+
+#leaderboard tbody tr:hover {
+    background: #1a1a1a;
+}
+
+#leaderboard tbody td {
+    padding: 0.7rem 0.6rem;
+    font-size: 1rem;
+}
+
+#leaderboard tbody td:first-child {
+    font-weight: bold;
+    color: #ffaa00;
+    width: 40px;
+}
+
+#leaderboard tbody td.warn-cell {
+    color: #ff4444;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.no-results {
+    text-align: center;
+    color: #555;
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Player Panel */
+#player-panel {
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+}
+
+#welcome-msg {
+    color: #44ff44;
+    margin-bottom: 2rem;
+    font-size: 1.3rem;
+}
+
+#buzzer-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.buzzer-btn {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    font-weight: bold;
+    letter-spacing: 0.15rem;
+    cursor: pointer;
+    border: 4px solid;
+    transition: all 0.1s;
+    text-transform: uppercase;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.buzzer-btn.locked {
+    background: #330000;
+    color: #ff4444;
+    border-color: #ff4444;
+    cursor: not-allowed;
+    box-shadow: 0 0 40px rgba(255, 68, 68, 0.2);
+}
+
+.buzzer-btn.unlocked {
+    background: #003300;
+    color: #44ff44;
+    border-color: #44ff44;
+    cursor: pointer;
+    box-shadow: 0 0 40px rgba(68, 255, 68, 0.3);
+    animation: pulse-green 1s infinite;
+}
+
+.buzzer-btn.unlocked:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 60px rgba(68, 255, 68, 0.6);
+}
+
+@keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 40px rgba(68, 255, 68, 0.3); }
+    50% { box-shadow: 0 0 60px rgba(68, 255, 68, 0.5); }
+}
+
+.buzz-result {
+    font-size: 1.3rem;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+}
+
+.buzz-result .time {
+    color: #44ff44;
+    font-weight: bold;
+}
+
+.buzz-result .rank {
+    color: #ffaa00;
+    margin-left: 0.5rem;
+}
+
+.player-info {
+    margin-top: 2rem;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+#player-status-text {
+    transition: color 0.2s;
+}

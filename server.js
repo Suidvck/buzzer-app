@@ -4,9 +4,21 @@ const { Server } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
 
-app.use(express.static('public'));
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://suidvck.github.io';
+
+const io = new Server(server, {
+    cors: {
+        origin: FRONTEND_URL,
+        methods: ['GET', 'POST'],
+        credentials: true
+    },
+    transports: ['websocket', 'polling']
+});
+
+app.get('/', (req, res) => {
+    res.json({ status: 'ok', message: 'Buzzer App Backend' });
+});
 
 let isLocked = true;
 let hostId = null;
@@ -102,7 +114,7 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`\n========================================`);
-    console.log(`  Buzzer App running on port ${PORT}`);
-    console.log(`  Open: http://localhost:${PORT}`);
+    console.log(`  Buzzer App Backend running on port ${PORT}`);
+    console.log(`  Frontend URL: ${FRONTEND_URL}`);
     console.log(`========================================\n`);
 });
