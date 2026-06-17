@@ -5,7 +5,6 @@ const socket = io(BACKEND_URL, {
 let role = null;
 let playerName = '';
 let isLocked = true;
-let startTime = null;
 let localStartTime = null;
 let hasBuzzed = false;
 
@@ -18,13 +17,36 @@ function selectRole(r) {
     role = r;
     document.getElementById('role-select').classList.add('hidden');
     if (r === 'host') {
-        document.getElementById('host-panel').classList.remove('hidden');
-        socket.emit('register-host');
+        document.getElementById('host-panel').classList.add('hidden');
+        document.getElementById('host-password-input').classList.remove('hidden');
+        document.getElementById('host-password').focus();
     } else {
         document.getElementById('name-input').classList.remove('hidden');
         document.getElementById('player-name').focus();
     }
 }
+
+function submitHostPassword() {
+    const input = document.getElementById('host-password');
+    const password = input.value.trim();
+    if (!password) return;
+    socket.emit('register-host', { password });
+}
+
+document.getElementById('host-password').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitHostPassword();
+});
+
+socket.on('host-auth-failed', () => {
+    document.getElementById('host-password-error').classList.remove('hidden');
+    document.getElementById('host-password').value = '';
+    document.getElementById('host-password').focus();
+});
+
+socket.on('host-auth-success', () => {
+    document.getElementById('host-password-input').classList.add('hidden');
+    document.getElementById('host-panel').classList.remove('hidden');
+});
 
 function submitName() {
     const input = document.getElementById('player-name');
@@ -47,10 +69,6 @@ function hostAction(action) {
 
 socket.on('connect', () => {
     console.log('Connected to server:', BACKEND_URL);
-    const statusText = document.getElementById('player-status-text');
-    if (statusText && !role) {
-        statusText.textContent = 'เชื่อมต่อสำเร็จ - เลือกบทบาท';
-    }
 });
 
 socket.on('disconnect', () => {
@@ -88,7 +106,6 @@ socket.on('results-update', (results) => {
 
 socket.on('button-state', (data) => {
     isLocked = data.locked;
-    startTime = data.startTime;
 
     const status = document.getElementById('host-status');
     if (status) {
@@ -108,14 +125,14 @@ socket.on('button-state', (data) => {
 
 function handleButtonState(data) {
     isLocked = data.locked;
-    startTime = data.startTime;
     hasBuzzed = false;
 
     if (!isLocked) {
-        localStartTime = Date.now();
+        localStartTime = performance.now();
     } else {
         localStartTime = null;
     }
+
     const btn = document.getElementById('buzzer-btn');
     const resultDiv = document.getElementById('buzz-result');
     const statusText = document.getElementById('player-status-text');
@@ -146,15 +163,17 @@ buzzerBtn.addEventListener('mousedown', mousedownHandler);
 buzzerBtn.addEventListener('touchstart', mousedownHandler, { passive: false });
 
 function handleBuzz() {
-    const now = Date.now();
-    trackClick(now);
+    const now = performance.now();
+    trackClick(Date.now());
 
-    if (isLocked || !localStartTime) return;
+    if (isLocked || localStartTime === null) return;
     if (hasBuzzed) return;
 
     hasBuzzed = true;
 
-    const timeMs = now - localStartTime;
+    const timeMs = Math.round(now - localStartTime);
+    if (timeMs < 0) return;
+
     const { isAutoClick, cps } = analyzeClicks();
 
     socket.emit('buzz', { timeMs, isAutoClick, cps });

@@ -20,6 +20,13 @@
         <button onclick="submitName()">เข้าร่วม</button>
     </div>
 
+    <div id="host-password-input" class="hidden">
+        <h2>ใส่รหัสหัวห้อง</h2>
+        <input type="password" id="host-password" placeholder="รหัส..." autofocus>
+        <button onclick="submitHostPassword()">ยืนยัน</button>
+        <p id="host-password-error" class="hidden" style="color:#ff4444;margin-top:0.5rem">รหัสผิด!</p>
+    </div>
+
     <div id="host-panel" class="hidden">
         <h2>HOST CONTROL</h2>
         <div class="host-controls">

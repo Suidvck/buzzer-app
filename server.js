@@ -30,12 +30,20 @@ let buzzStartTime = null;
 let players = [];
 let buzzResults = [];
 
+const HOST_PASSWORD = 'godpleum69';
+
 io.on('connection', (socket) => {
     console.log(`[+] ${socket.id} connected`);
 
-    socket.on('register-host', () => {
+    socket.on('register-host', (data) => {
+        if (!data || data.password !== HOST_PASSWORD) {
+            socket.emit('host-auth-failed');
+            console.log(`[!] Host auth failed: ${socket.id}`);
+            return;
+        }
         hostId = socket.id;
         socket.join('host');
+        socket.emit('host-auth-success');
         console.log(`[*] Host registered: ${socket.id}`);
     });
 
