@@ -4,6 +4,7 @@ let role = null;
 let playerName = '';
 let isLocked = true;
 let startTime = null;
+let localStartTime = null;
 let hasBuzzed = false;
 
 // Auto-click detection
@@ -92,6 +93,12 @@ socket.on('button-state', (data) => {
     isLocked = data.locked;
     startTime = data.startTime;
     hasBuzzed = false;
+
+    if (!isLocked) {
+        localStartTime = Date.now();
+    } else {
+        localStartTime = null;
+    }
     const btn = document.getElementById('buzzer-btn');
     const resultDiv = document.getElementById('buzz-result');
     const statusText = document.getElementById('player-status-text');
@@ -128,12 +135,12 @@ function handleBuzz() {
     // Track click for auto-click detection (always, even when locked)
     trackClick(now);
 
-    if (isLocked || !startTime) return;
+    if (isLocked || !localStartTime) return;
     if (hasBuzzed) return;
 
     hasBuzzed = true;
 
-    const timeMs = now - startTime;
+    const timeMs = now - localStartTime;
     const { isAutoClick, cps } = analyzeClicks();
 
     socket.emit('buzz', { timeMs, isAutoClick, cps });
