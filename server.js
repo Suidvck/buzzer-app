@@ -17,7 +17,11 @@ const io = new Server(server, {
 });
 
 app.get('/', (req, res) => {
-    res.json({ status: 'ok', message: 'Buzzer App Backend' });
+    res.send('Buzzer App Backend - OK');
+});
+
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
 });
 
 let isLocked = true;

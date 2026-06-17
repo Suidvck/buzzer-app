@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: buzzer-app-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: FRONTEND_URL
+        value: https://suidvck.github.io
