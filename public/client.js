@@ -177,7 +177,7 @@ function handleBuzz() {
 socket.on('buzz-confirmed', (data) => {
     const resultDiv = document.getElementById('buzz-result');
     resultDiv.classList.remove('hidden');
-    resultDiv.innerHTML = `<span class="time">${data.timeMs} ms</span> <span class="rank">อันดับ #${data.rank}</span>`;
+    resultDiv.innerHTML = `<span class="time">${data.timeMs} ms</span>`;
 });
 
 function trackClick(now) {
