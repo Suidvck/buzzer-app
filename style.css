@@ -7,7 +7,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #0a0a0a;
-    color: #fff;
+    color: #f5f0e8;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -26,13 +26,13 @@ body {
 #role-select h1 {
     font-size: 4rem;
     letter-spacing: 1rem;
-    color: #ff4444;
-    text-shadow: 0 0 30px rgba(255, 68, 68, 0.5);
+    color: #f5f0e8;
+    text-shadow: 0 0 30px rgba(245, 240, 232, 0.3);
     margin-bottom: 1rem;
 }
 
 #role-select p {
-    color: #888;
+    color: #b8a88a;
     margin-bottom: 2rem;
     font-size: 1.1rem;
 }
@@ -54,24 +54,24 @@ body {
 
 #btn-host-role {
     background: transparent;
-    color: #ff4444;
-    border-color: #ff4444;
+    color: #f5f0e8;
+    border-color: #f5f0e8;
 }
 
 #btn-host-role:hover {
-    background: #ff4444;
-    color: #fff;
+    background: #f5f0e8;
+    color: #0a0a0a;
 }
 
 #btn-player-role {
     background: transparent;
-    color: #44ff44;
-    border-color: #44ff44;
+    color: #b8a88a;
+    border-color: #b8a88a;
 }
 
 #btn-player-role:hover {
-    background: #44ff44;
-    color: #000;
+    background: #b8a88a;
+    color: #0a0a0a;
 }
 
 /* Name Input */
@@ -81,7 +81,7 @@ body {
 
 #name-input h2 {
     margin-bottom: 1.5rem;
-    color: #ccc;
+    color: #f5f0e8;
 }
 
 #name-input input {
@@ -90,16 +90,16 @@ body {
     margin: 0 auto 1rem;
     padding: 0.8rem 1.2rem;
     font-size: 1.2rem;
-    border: 2px solid #444;
+    border: 2px solid #b8a88a;
     border-radius: 8px;
     background: #1a1a1a;
-    color: #fff;
+    color: #f5f0e8;
     text-align: center;
     outline: none;
 }
 
 #name-input input:focus {
-    border-color: #44ff44;
+    border-color: #f5f0e8;
 }
 
 #name-input button {
@@ -109,8 +109,8 @@ body {
     padding: 0.8rem;
     font-size: 1.2rem;
     font-weight: bold;
-    background: #44ff44;
-    color: #000;
+    background: #f5f0e8;
+    color: #0a0a0a;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -118,7 +118,7 @@ body {
 }
 
 #name-input button:hover {
-    background: #33cc33;
+    background: #d4c5a9;
 }
 
 /* Host Panel */
@@ -130,7 +130,7 @@ body {
 
 #host-panel h2 {
     text-align: center;
-    color: #ff4444;
+    color: #f5f0e8;
     letter-spacing: 0.3rem;
     margin-bottom: 1.5rem;
 }
@@ -138,7 +138,7 @@ body {
 #host-panel h3 {
     margin-top: 1.5rem;
     margin-bottom: 0.8rem;
-    color: #aaa;
+    color: #b8a88a;
     letter-spacing: 0.1rem;
 }
 
@@ -163,35 +163,35 @@ body {
 
 .control-btn.unlock {
     background: transparent;
-    color: #44ff44;
-    border-color: #44ff44;
+    color: #b8a88a;
+    border-color: #b8a88a;
 }
 
 .control-btn.unlock:hover {
-    background: #44ff44;
-    color: #000;
+    background: #b8a88a;
+    color: #0a0a0a;
 }
 
 .control-btn.lock {
     background: transparent;
-    color: #ff4444;
-    border-color: #ff4444;
+    color: #f5f0e8;
+    border-color: #f5f0e8;
 }
 
 .control-btn.lock:hover {
-    background: #ff4444;
-    color: #fff;
+    background: #f5f0e8;
+    color: #0a0a0a;
 }
 
 .control-btn.reset {
     background: transparent;
-    color: #ffaa00;
-    border-color: #ffaa00;
+    color: #8a7a6a;
+    border-color: #8a7a6a;
 }
 
 .control-btn.reset:hover {
-    background: #ffaa00;
-    color: #000;
+    background: #8a7a6a;
+    color: #0a0a0a;
 }
 
 .status-bar {
@@ -201,16 +201,16 @@ body {
     background: #1a1a1a;
     border-radius: 6px;
     font-size: 0.9rem;
-    color: #888;
+    color: #b8a88a;
 }
 
 .status-bar .status-lock {
-    color: #ff4444;
+    color: #f5f0e8;
     font-weight: bold;
 }
 
 .status-bar .status-unlock {
-    color: #44ff44;
+    color: #b8a88a;
     font-weight: bold;
 }
 
@@ -223,15 +223,15 @@ body {
 #leaderboard thead th {
     padding: 0.6rem;
     text-align: left;
-    border-bottom: 2px solid #333;
-    color: #888;
+    border-bottom: 2px solid #b8a88a;
+    color: #b8a88a;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
 }
 
 #leaderboard tbody tr {
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid #333;
     transition: background 0.15s;
 }
 
@@ -246,19 +246,19 @@ body {
 
 #leaderboard tbody td:first-child {
     font-weight: bold;
-    color: #ffaa00;
+    color: #f5f0e8;
     width: 40px;
 }
 
 #leaderboard tbody td.warn-cell {
-    color: #ff4444;
+    color: #d4a574;
     font-weight: bold;
     font-size: 0.85rem;
 }
 
 .no-results {
     text-align: center;
-    color: #555;
+    color: #5a5040;
     padding: 2rem;
     font-style: italic;
 }
@@ -272,7 +272,7 @@ body {
 }
 
 #welcome-msg {
-    color: #44ff44;
+    color: #f5f0e8;
     margin-bottom: 2rem;
     font-size: 1.3rem;
 }
@@ -332,25 +332,72 @@ body {
     padding: 1rem 2rem;
     border-radius: 8px;
     background: #1a1a1a;
-    border: 1px solid #333;
+    border: 1px solid #b8a88a;
 }
 
 .buzz-result .time {
-    color: #44ff44;
+    color: #b8a88a;
     font-weight: bold;
 }
 
 .buzz-result .rank {
-    color: #ffaa00;
+    color: #f5f0e8;
     margin-left: 0.5rem;
 }
 
 .player-info {
     margin-top: 2rem;
-    color: #666;
+    color: #8a7a6a;
     font-size: 0.95rem;
 }
 
 #player-status-text {
     transition: color 0.2s;
+}
+
+/* Host Password */
+#host-password-input {
+    text-align: center;
+}
+
+#host-password-input h2 {
+    margin-bottom: 1.5rem;
+    color: #f5f0e8;
+}
+
+#host-password-input input {
+    display: block;
+    width: 300px;
+    margin: 0 auto 1rem;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.2rem;
+    border: 2px solid #b8a88a;
+    border-radius: 8px;
+    background: #1a1a1a;
+    color: #f5f0e8;
+    text-align: center;
+    outline: none;
+}
+
+#host-password-input input:focus {
+    border-color: #f5f0e8;
+}
+
+#host-password-input button {
+    display: block;
+    width: 300px;
+    margin: 0 auto;
+    padding: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: #f5f0e8;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#host-password-input button:hover {
+    background: #d4c5a9;
 }
