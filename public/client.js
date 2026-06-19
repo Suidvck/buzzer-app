@@ -92,6 +92,15 @@ socket.on('results-update', (results) => {
             ${warn}
         </tr>`;
     }).join('');
+
+    if (role === 'player') {
+        const myIndex = results.findIndex(r => r.playerId === socket.id);
+        if (myIndex !== -1) {
+            const resultDiv = document.getElementById('buzz-result');
+            const rank = myIndex + 1;
+            resultDiv.innerHTML = `<span class="time">${results[myIndex].timeMs} ms</span> <span class="rank">อันดับ #${rank}</span>`;
+        }
+    }
 });
 
 socket.on('button-state', (data) => {
@@ -174,10 +183,9 @@ function handleBuzz() {
     btn.disabled = true;
 }
 
-socket.on('buzz-confirmed', (data) => {
+socket.on('buzz-confirmed', () => {
     const resultDiv = document.getElementById('buzz-result');
     resultDiv.classList.remove('hidden');
-    resultDiv.innerHTML = `<span class="time">${data.timeMs} ms</span>`;
 });
 
 function trackClick(now) {

@@ -104,10 +104,8 @@ io.on('connection', (socket) => {
         buzzResults.push(result);
         buzzResults.sort((a, b) => a.timeMs - b.timeMs);
 
-        io.to('host').emit('results-update', buzzResults);
-
-        const rank = buzzResults.findIndex(r => r.playerId === socket.id) + 1;
-        socket.emit('buzz-confirmed', { rank, timeMs: data.timeMs });
+        io.emit('results-update', buzzResults);
+        socket.emit('buzz-confirmed', { timeMs: data.timeMs });
 
         console.log(`[BUZZ] ${player.name}: ${data.timeMs}ms (auto: ${data.isAutoClick}, cps: ${data.cps})`);
     });
