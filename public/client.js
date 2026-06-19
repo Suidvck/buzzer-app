@@ -181,12 +181,11 @@ function handleBuzz() {
     btn.className = 'buzzer-btn locked';
     btn.textContent = 'SENT!';
     btn.disabled = true;
-}
 
-socket.on('buzz-confirmed', () => {
     const resultDiv = document.getElementById('buzz-result');
     resultDiv.classList.remove('hidden');
-});
+    resultDiv.innerHTML = `<span class="time">${timeMs} ms</span> <span class="rank">กำลังตรวจสอบ...</span>`;
+}
 
 function trackClick(now) {
     clickTimestamps.push(now);
