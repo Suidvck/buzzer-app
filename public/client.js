@@ -1,10 +1,13 @@
-const socket = io();
+const socket = io(BACKEND_URL, {
+    transports: ['websocket', 'polling']
+});
 
 let role = null;
 let playerName = '';
 let isLocked = true;
 let localStartTime = null;
 let hasBuzzed = false;
+let buzzRetryInterval = null;
 
 const clickTimestamps = [];
 const CLICK_WINDOW = 5000;
@@ -64,6 +67,25 @@ document.getElementById('player-name').addEventListener('keydown', (e) => {
 function hostAction(action) {
     socket.emit(action);
 }
+
+socket.on('connect', () => {
+    console.log('Connected to server:', BACKEND_URL);
+});
+
+socket.on('disconnect', () => {
+    console.log('Disconnected from server');
+});
+
+socket.on('buzz-confirmed', (data) => {
+    if (buzzRetryInterval) {
+        clearInterval(buzzRetryInterval);
+        buzzRetryInterval = null;
+    }
+    const resultDiv = document.getElementById('buzz-result');
+    if (resultDiv) {
+        resultDiv.innerHTML = `<span class="time">${data.timeMs} ms</span> <span class="rank">ส่งข้อมูลสำเร็จ! รอจัดอันดับ...</span>`;
+    }
+});
 
 socket.on('players-update', (players) => {
     document.getElementById('player-count').textContent = players.length;
@@ -169,15 +191,25 @@ function handleBuzz() {
     if (hasBuzzed) return;
 
     hasBuzzed = true;
-
+ 
     const timeMs = Math.round(now - localStartTime);
     if (timeMs < 0) return;
-
+ 
     const { isAutoClick, cps } = analyzeClicks();
-
-    socket.emit('buzz', { timeMs, isAutoClick, cps });
-
+ 
+    const buzzData = { timeMs, isAutoClick, cps };
+    
+    // Send immediately
+    socket.emit('buzz', buzzData);
+ 
+    // Setup retry mechanism: send every 100ms until buzz-confirmed is received
+    buzzRetryInterval = setInterval(() => {
+        console.log('Retrying buzz...');
+        socket.emit('buzz', buzzData);
+    }, 100);
+ 
     const btn = document.getElementById('buzzer-btn');
+
     btn.className = 'buzzer-btn locked';
     btn.textContent = 'SENT!';
     btn.disabled = true;
