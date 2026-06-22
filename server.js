@@ -29,8 +29,17 @@ let hostId = null;
 let buzzStartTime = null;
 let players = [];
 let buzzResults = [];
+let pendingBroadcast = false;
 
 const HOST_PASSWORD = 'godpleum69';
+
+// Throttled broadcast to players to prevent network congestion during spikes
+setInterval(() => {
+    if (pendingBroadcast && !isLocked) {
+        io.emit('results-update', buzzResults);
+        pendingBroadcast = false;
+    }
+}, 200);
 
 io.on('connection', (socket) => {
     console.log(`[+] ${socket.id} connected`);
@@ -51,6 +60,7 @@ io.on('connection', (socket) => {
         if (socket.id !== hostId) return;
         isLocked = false;
         buzzResults = [];
+        pendingBroadcast = false;
         buzzStartTime = Date.now();
         io.emit('button-state', { locked: false, startTime: buzzStartTime });
         io.to('host').emit('results-update', buzzResults);
@@ -68,6 +78,7 @@ io.on('connection', (socket) => {
         if (socket.id !== hostId) return;
         isLocked = true;
         buzzResults = [];
+        pendingBroadcast = false;
         buzzStartTime = null;
         io.emit('button-state', { locked: true, startTime: null });
         io.to('host').emit('results-update', []);
@@ -86,28 +97,44 @@ io.on('connection', (socket) => {
     });
 
     socket.on('buzz', (data) => {
-        if (isLocked) return;
-        const player = players.find(p => p.id === socket.id);
-        if (!player) return;
+        try {
+            if (isLocked) return;
+            if (!data || typeof data.timeMs !== 'number') {
+                console.log(`[!] Invalid buzz data from ${socket.id}`);
+                return;
+            }
 
-        const alreadyBuzzed = buzzResults.find(r => r.playerId === socket.id);
-        if (alreadyBuzzed) return;
+            const player = players.find(p => p.id === socket.id);
+            if (!player) return;
 
-        const result = {
-            playerId: socket.id,
-            name: player.name,
-            timeMs: data.timeMs,
-            isAutoClick: data.isAutoClick,
-            cps: data.cps
-        };
+            const alreadyBuzzed = buzzResults.find(r => r.playerId === socket.id);
+            if (alreadyBuzzed) return;
 
-        buzzResults.push(result);
-        buzzResults.sort((a, b) => a.timeMs - b.timeMs);
+            const result = {
+                playerId: socket.id,
+                name: player.name,
+                timeMs: data.timeMs,
+                isAutoClick: !!data.isAutoClick,
+                cps: data.cps || 0
+            };
 
-        io.emit('results-update', buzzResults);
-        socket.emit('buzz-confirmed', { timeMs: data.timeMs });
+            buzzResults.push(result);
+            buzzResults.sort((a, b) => a.timeMs - b.timeMs);
 
-        console.log(`[BUZZ] ${player.name}: ${data.timeMs}ms (auto: ${data.isAutoClick}, cps: ${data.cps})`);
+            // 1. Immediate confirmation to the player (Highest Priority)
+            socket.emit('buzz-confirmed', { timeMs: data.timeMs });
+
+            // 2. Immediate update to the host (High Priority)
+            io.to('host').emit('results-update', buzzResults);
+
+            // 3. Mark for throttled broadcast to all players (Lower Priority)
+            pendingBroadcast = true;
+
+            console.log(`[BUZZ] ${player.name}: ${data.timeMs}ms (auto: ${result.isAutoClick}, cps: ${result.cps})`);
+        } catch (err) {
+            console.error(`[ERROR] Buzz handler crashed for ${socket.id}:`, err);
+            socket.emit('error', { message: 'Internal server error during buzz' });
+        }
     });
 
     socket.on('disconnect', () => {
