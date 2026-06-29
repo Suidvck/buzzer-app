@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
+const { performance } = require('perf_hooks');
 
 const app = express();
 const server = http.createServer(app);
@@ -39,7 +40,7 @@ setInterval(() => {
         io.emit('results-update', buzzResults);
         pendingBroadcast = false;
     }
-}, 200);
+}, 50);
 
 io.on('connection', (socket) => {
     console.log(`[+] ${socket.id} connected`);
@@ -61,7 +62,7 @@ io.on('connection', (socket) => {
         isLocked = false;
         buzzResults = [];
         pendingBroadcast = false;
-        buzzStartTime = Date.now();
+        buzzStartTime = performance.now();
         io.emit('button-state', { locked: false, startTime: buzzStartTime });
         io.to('host').emit('results-update', buzzResults);
         console.log(`[UNLOCK] Button unlocked. t1=${buzzStartTime}`);
@@ -99,38 +100,44 @@ io.on('connection', (socket) => {
     socket.on('buzz', (data) => {
         try {
             if (isLocked) return;
-            if (!data || typeof data.timeMs !== 'number') {
-                console.log(`[!] Invalid buzz data from ${socket.id}`);
-                return;
-            }
-
+            
             const player = players.find(p => p.id === socket.id);
             if (!player) return;
 
             const alreadyBuzzed = buzzResults.find(r => r.playerId === socket.id);
             if (alreadyBuzzed) return;
 
+            // Calculate time on server to prevent spoofing and trust issues
+            const serverTimeNow = performance.now();
+            const timeMs = Math.round(serverTimeNow - buzzStartTime);
+
             const result = {
                 playerId: socket.id,
                 name: player.name,
-                timeMs: data.timeMs,
-                isAutoClick: !!data.isAutoClick,
-                cps: data.cps || 0
+                timeMs: timeMs,
+                isAutoClick: !!data?.isAutoClick,
+                cps: data?.cps || 0,
+                serverArrivalTime: serverTimeNow
             };
 
             buzzResults.push(result);
-            buzzResults.sort((a, b) => a.timeMs - b.timeMs);
+            buzzResults.sort((a, b) => {
+                if (a.timeMs !== b.timeMs) {
+                    return a.timeMs - b.timeMs;
+                }
+                return a.serverArrivalTime - b.serverArrivalTime;
+            });
 
-            // 1. Immediate confirmation to the player (Highest Priority)
-            socket.emit('buzz-confirmed', { timeMs: data.timeMs });
+            // 1. Immediate confirmation to the player
+            socket.emit('buzz-confirmed', { timeMs: timeMs });
 
-            // 2. Immediate update to the host (High Priority)
+            // 2. Immediate update to the host
             io.to('host').emit('results-update', buzzResults);
 
-            // 3. Mark for throttled broadcast to all players (Lower Priority)
+            // 3. Mark for throttled broadcast to all players
             pendingBroadcast = true;
 
-            console.log(`[BUZZ] ${player.name}: ${data.timeMs}ms (auto: ${result.isAutoClick}, cps: ${result.cps})`);
+            console.log(`[BUZZ] ${player.name}: ${timeMs}ms (auto: ${result.isAutoClick}, cps: ${result.cps})`);
         } catch (err) {
             console.error(`[ERROR] Buzz handler crashed for ${socket.id}:`, err);
             socket.emit('error', { message: 'Internal server error during buzz' });

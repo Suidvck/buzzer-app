@@ -192,7 +192,7 @@ function handleBuzz() {
 
     hasBuzzed = true;
  
-    const timeMs = Math.round(now - localStartTime);
+    const timeMs = now - localStartTime;
     if (timeMs < 0) return;
  
     const { isAutoClick, cps } = analyzeClicks();

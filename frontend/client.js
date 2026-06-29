@@ -78,7 +78,7 @@ socket.on('disconnect', () => {
 
 socket.on('buzz-confirmed', (data) => {
     if (buzzRetryInterval) {
-        clearInterval(buzzRetryInterval);
+        clearTimeout(buzzRetryInterval);
         buzzRetryInterval = null;
     }
     const resultDiv = document.getElementById('buzz-result');
@@ -192,23 +192,24 @@ function handleBuzz() {
 
     hasBuzzed = true;
  
-    const timeMs = Math.round(now - localStartTime);
+    const timeMs = now - localStartTime;
     if (timeMs < 0) return;
  
     const { isAutoClick, cps } = analyzeClicks();
  
-    const buzzData = { timeMs, isAutoClick, cps };
+    const buzzData = { isAutoClick, cps };
     
     // Send immediately
     socket.emit('buzz', buzzData);
- 
-    // Setup retry mechanism: send every 100ms until buzz-confirmed is received
-    buzzRetryInterval = setInterval(() => {
-        console.log('Retrying buzz...');
+    
+    // Setup slow retry mechanism: only if no confirmation is received after 1s
+    buzzRetryInterval = setTimeout(() => {
+        console.log('No confirmation received, retrying buzz...');
         socket.emit('buzz', buzzData);
-    }, 100);
- 
+    }, 1000);
+    
     const btn = document.getElementById('buzzer-btn');
+
 
     btn.className = 'buzzer-btn locked';
     btn.textContent = 'SENT!';
